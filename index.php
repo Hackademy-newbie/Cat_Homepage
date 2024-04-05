@@ -1,25 +1,25 @@
 <?php
 
-if($_SERVER["REQUEST_METHOD"]=="POST") {
+session_save_path('./');
+session_start();
 
+if($_SERVER["REQUEST_METHOD"]=="POST") {
 	$input_username = $_POST['username'];
 	$input_password = $_POST['password'];
 
-	$validUsername = "123";
-	$validPassword = "123";
+	$db = new SQLite3('cat_homepage.db');
 
-	$baboUsername = "babo";
-	$baboPassword = "babo";
+	$query = "SELECT * FROM users WHERE username='{$input_username}' AND password='{$input_password}' ";
+    $result = $db->query($query);
+    $row = $result->fetchArray();
 
-	if($input_username == $validUsername && $input_password == $validPassword) {
-		setcookie("user", "grape_bs",time() + 3600,"/");
-		header("Location: page-grape.php");
+	if($row) {
+		//setcookie("user", "grape_bs",time() + 3600,"/");
+        $login_user = $row["username"];
+		$_SESSION['user'] = $login_user;
+		header("Location: page-{$login_user}.php");
 		exit();
-	} else if($input_username == $baboUsername && $input_password == $baboPassword) {
-		setcookie("user", "babo_dg",time() + 3600,"/");
-		header("Location: page-babo.php");
-		exit();
-	} 
+	}
 	else {
 		$errorMessage = "Invalid username or password";
 	}

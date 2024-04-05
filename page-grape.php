@@ -1,5 +1,7 @@
 <?php
-if ($_COOKIE["user"]=="grape_bs") {
+session_save_path('./');
+session_start();
+if (isset($_SESSION['user']) && $_SESSION['user']=='grape') {
     echo "login success!";
 } else {
     header("Location: goback.php");
